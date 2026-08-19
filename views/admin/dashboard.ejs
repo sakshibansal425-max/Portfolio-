@@ -1,0 +1,290 @@
+<section class="container" style="padding: var(--space-2xl) var(--space-md);">
+  <!-- Dashboard Header -->
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-2xl); flex-wrap: wrap; gap: var(--space-md);">
+    <div>
+      <span class="badge badge-status">Admin Portal</span>
+      <h1 style="font-size: 2.2rem; margin-top: var(--space-2xs);">Submissions Management</h1>
+      <p style="color: var(--text-muted); margin: 0;">Log of visitor inquiries stored in local SQLite database.</p>
+    </div>
+    
+    <div style="display: flex; align-items: center; gap: var(--space-md);">
+      <div style="text-align: right;">
+        <strong style="display: block; color: var(--accent-white); font-size: 0.95rem;"><%= adminUser.username %></strong>
+        <span style="font-size: 0.8rem; color: var(--text-muted);"><%= adminUser.email %></span>
+      </div>
+      <form action="/api/admin/logout" method="POST" style="margin: 0;">
+        <button type="submit" class="btn btn-secondary btn-sm">Sign Out</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Summary Stats Row -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-2xl);">
+    <div class="glass-card" style="padding: var(--space-lg);">
+      <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Total Submissions</span>
+      <div style="font-family: var(--font-heading); font-size: 2.5rem; font-weight: 800; color: var(--accent-white); line-height: 1.1; margin-top: 0.2rem;" id="statTotal"><%= stats.total %></div>
+    </div>
+    <div class="glass-card" style="padding: var(--space-lg);">
+      <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Unread Inquiries</span>
+      <div style="font-family: var(--font-heading); font-size: 2.5rem; font-weight: 800; color: #F59E0B; line-height: 1.1; margin-top: 0.2rem;" id="statUnread"><%= stats.unread %></div>
+    </div>
+    <div class="glass-card" style="padding: var(--space-lg);">
+      <span style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Starred Items</span>
+      <div style="font-family: var(--font-heading); font-size: 2.5rem; font-weight: 800; color: #38BDF8; line-height: 1.1; margin-top: 0.2rem;" id="statStarred"><%= stats.starred %></div>
+    </div>
+  </div>
+
+  <!-- Filters & Search Toolbar -->
+  <div class="glass-card" style="padding: var(--space-lg); margin-bottom: var(--space-xl);">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); flex-wrap: wrap;">
+      <div style="display: flex; gap: var(--space-xs);">
+        <button class="btn btn-secondary btn-sm filter-btn active" data-filter="all">All (<%= stats.total %>)</button>
+        <button class="btn btn-secondary btn-sm filter-btn" data-filter="unread">Unread (<%= stats.unread %>)</button>
+        <button class="btn btn-secondary btn-sm filter-btn" data-filter="starred">Starred (<%= stats.starred %>)</button>
+      </div>
+
+      <div style="position: relative; min-width: 260px;">
+        <input type="text" id="searchInput" placeholder="Search name, email, subject..." class="form-input" style="padding-left: 2.2rem; font-size: 0.88rem;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submissions Data Table -->
+  <div class="glass-card" style="padding: 0; overflow: hidden;">
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem;" id="submissionsTable">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--border-light); background: rgba(255,255,255,0.02);">
+            <th style="padding: var(--space-md) var(--space-lg); color: var(--text-muted); font-weight: 600;">Sender</th>
+            <th style="padding: var(--space-md); color: var(--text-muted); font-weight: 600;">Subject</th>
+            <th style="padding: var(--space-md); color: var(--text-muted); font-weight: 600;">Date</th>
+            <th style="padding: var(--space-md); color: var(--text-muted); font-weight: 600;">Status</th>
+            <th style="padding: var(--space-md) var(--space-lg); text-align: right; color: var(--text-muted); font-weight: 600;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (submissions.length === 0) { %>
+            <tr>
+              <td colspan="5" style="padding: var(--space-2xl); text-align: center; color: var(--text-muted);">
+                No contact form submissions recorded yet. Submissions will appear here in real time.
+              </td>
+            </tr>
+          <% } else { %>
+            <% submissions.forEach(item => { %>
+              <tr class="submission-row" 
+                  data-id="<%= item.id %>" 
+                  data-status="<%= item.status %>" 
+                  data-starred="<%= item.isStarred %>"
+                  data-search="<%= (item.name + ' ' + item.email + ' ' + item.subject).toLowerCase() %>"
+                  style="border-bottom: 1px solid var(--border-light); background: <%= item.status === 'unread' ? 'rgba(255,255,255,0.03)' : 'transparent' %>;">
+                
+                <!-- Sender -->
+                <td style="padding: var(--space-md) var(--space-lg);">
+                  <div style="display: flex; align-items: center; gap: var(--space-xs);">
+                    <button class="star-toggle-btn" data-id="<%= item.id %>" style="background: none; border: none; cursor: pointer; color: <%= item.isStarred ? '#38BDF8' : 'var(--text-dim)' %>; padding: 0;">
+                      <%= item.isStarred ? '★' : '☆' %>
+                    </button>
+                    <div>
+                      <strong style="color: var(--accent-white); font-weight: 600;"><%= item.name %></strong>
+                      <div style="font-size: 0.8rem; color: var(--text-muted);"><%= item.email %></div>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Subject -->
+                <td style="padding: var(--space-md); color: var(--accent-silver);">
+                  <span style="font-weight: 500;"><%= item.subject %></span>
+                </td>
+
+                <!-- Date -->
+                <td style="padding: var(--space-md); color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-code);">
+                  <%= new Date(item.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+                </td>
+
+                <!-- Status Badge -->
+                <td style="padding: var(--space-md);">
+                  <% if (item.status === 'unread') { %>
+                    <span class="badge" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #F59E0B;">Unread</span>
+                  <% } else { %>
+                    <span class="badge" style="background: rgba(255, 255, 255, 0.05); color: var(--text-muted);">Read</span>
+                  <% } %>
+                </td>
+
+                <!-- Action Buttons -->
+                <td style="padding: var(--space-md) var(--space-lg); text-align: right;">
+                  <div style="display: flex; gap: var(--space-xs); justify-content: flex-end;">
+                    <button class="btn btn-secondary btn-sm view-msg-btn" 
+                            data-id="<%= item.id %>" 
+                            data-name="<%= item.name %>" 
+                            data-email="<%= item.email %>" 
+                            data-subject="<%= item.subject %>" 
+                            data-message="<%= item.message %>"
+                            data-date="<%= new Date(item.createdAt).toLocaleString() %>">
+                      View Message
+                    </button>
+                    <button class="btn btn-secondary btn-sm delete-btn" data-id="<%= item.id %>" style="color: #F87171; border-color: rgba(239, 68, 68, 0.3);">
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Message Detail Popup Modal -->
+<div id="messageModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; padding: var(--space-md);">
+  <div class="glass-card" style="width: 100%; max-width: 580px; position: relative; max-height: 90vh; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: var(--space-md); margin-bottom: var(--space-md);">
+      <div>
+        <h3 id="modalSubject" style="font-size: 1.25rem;">Message Detail</h3>
+        <span id="modalDate" style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-code);"></span>
+      </div>
+      <button id="closeModalBtn" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer;">&times;</button>
+    </div>
+
+    <div style="margin-bottom: var(--space-md);">
+      <strong style="color: var(--text-muted); font-size: 0.85rem; display: block;">From:</strong>
+      <div id="modalSender" style="color: var(--accent-white); font-weight: 600;"></div>
+    </div>
+
+    <div style="margin-bottom: var(--space-xl);">
+      <strong style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 0.4rem;">Message Text:</strong>
+      <div id="modalBody" style="background: rgba(0,0,0,0.5); padding: var(--space-md); border-radius: var(--radius-md); border: 1px solid var(--border-light); font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap; color: var(--accent-silver);"></div>
+    </div>
+
+    <div style="text-align: right;">
+      <button class="btn btn-primary btn-sm" id="modalCloseActionBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Search input filter
+    const searchInput = document.getElementById('searchInput');
+    const rows = document.querySelectorAll('.submission-row');
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        rows.forEach(row => {
+          const text = row.getAttribute('data-search') || '';
+          row.style.display = text.includes(query) ? '' : 'none';
+        });
+      });
+    }
+
+    // Filter Buttons (All, Unread, Starred)
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.getAttribute('data-filter');
+        rows.forEach(row => {
+          const status = row.getAttribute('data-status');
+          const starred = row.getAttribute('data-starred') === 'true';
+
+          if (filter === 'all') {
+            row.style.display = '';
+          } else if (filter === 'unread') {
+            row.style.display = status === 'unread' ? '' : 'none';
+          } else if (filter === 'starred') {
+            row.style.display = starred ? '' : 'none';
+          }
+        });
+      });
+    });
+
+    // Star Toggle Handler
+    document.querySelectorAll('.star-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        const row = btn.closest('.submission-row');
+        const isCurrentlyStarred = row.getAttribute('data-starred') === 'true';
+
+        try {
+          const res = await fetch(`/api/admin/submissions/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ isStarred: !isCurrentlyStarred })
+          });
+
+          if (res.ok) {
+            row.setAttribute('data-starred', (!isCurrentlyStarred).toString());
+            btn.textContent = !isCurrentlyStarred ? '★' : '☆';
+            btn.style.color = !isCurrentlyStarred ? '#38BDF8' : 'var(--text-dim)';
+          }
+        } catch (e) {
+          console.error('Star toggle failed', e);
+        }
+      });
+    });
+
+    // Modal View Handler
+    const modal = document.getElementById('messageModal');
+    const modalSubject = document.getElementById('modalSubject');
+    const modalDate = document.getElementById('modalDate');
+    const modalSender = document.getElementById('modalSender');
+    const modalBody = document.getElementById('modalBody');
+
+    document.querySelectorAll('.view-msg-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        const name = btn.getAttribute('data-name');
+        const email = btn.getAttribute('data-email');
+        const subject = btn.getAttribute('data-subject');
+        const message = btn.getAttribute('data-message');
+        const date = btn.getAttribute('data-date');
+
+        modalSubject.textContent = subject;
+        modalDate.textContent = date;
+        modalSender.textContent = `${name} (${email})`;
+        modalBody.textContent = message;
+
+        modal.style.display = 'flex';
+
+        // Mark as read in DB if unread
+        const row = btn.closest('.submission-row');
+        if (row.getAttribute('data-status') === 'unread') {
+          try {
+            await fetch(`/api/admin/submissions/${id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ status: 'read' })
+            });
+            row.setAttribute('data-status', 'read');
+            row.style.background = 'transparent';
+          } catch(e) {}
+        }
+      });
+    });
+
+    document.getElementById('closeModalBtn')?.addEventListener('click', () => modal.style.display = 'none');
+    document.getElementById('modalCloseActionBtn')?.addEventListener('click', () => modal.style.display = 'none');
+
+    // Delete Submission Handler
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        if (confirm(`Are you sure you want to delete submission #${id}?`)) {
+          try {
+            const res = await fetch(`/api/admin/submissions/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+              btn.closest('.submission-row').remove();
+            }
+          } catch(e) {
+            alert('Failed to delete item.');
+          }
+        }
+      });
+    });
+  });
+</script>

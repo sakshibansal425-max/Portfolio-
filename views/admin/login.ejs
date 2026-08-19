@@ -1,0 +1,19 @@
+<section class="container" style="padding: var(--space-2xl) var(--space-md); min-height: 60vh; display: flex; align-items: center; justify-content: center;">
+  <div class="glass-card" style="width: 100%; max-width: 420px;">
+    <div style="text-align: center; margin-bottom: var(--space-lg);">
+      <span class="badge badge-status">Admin Security Portal</span>
+      <h2 style="margin-top: var(--space-xs);">Sign In</h2>
+    </div>
+    <form action="/api/admin/login" method="POST" style="display: flex; flex-direction: column; gap: var(--space-md);">
+      <div>
+        <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem;">Username</label>
+        <input type="text" name="username" placeholder="admin" required style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.5); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--accent-white); font-family: var(--font-body);">
+      </div>
+      <div>
+        <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem;">Password</label>
+        <input type="password" name="password" placeholder="••••••••" required style="width: 100%; padding: 0.75rem; background: rgba(0,0,0,0.5); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--accent-white); font-family: var(--font-body);">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: var(--space-xs);">Log In</button>
+    </form>
+  </div>
+</section>

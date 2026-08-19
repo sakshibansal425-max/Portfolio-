@@ -1,0 +1,61 @@
+/* Design System Tokens - Sakshi Bansal Portfolio */
+:root {
+  /* Core Monochromatic Palette */
+  --bg-primary: #08080A;          /* Deepest obsidian black */
+  --bg-secondary: #121216;        /* Subtle slate-grey panel background */
+  --bg-card: rgba(22, 22, 28, 0.7);/* Glassmorphism translucent card */
+  --bg-card-hover: rgba(30, 30, 40, 0.85);
+
+  /* Borders & Accents */
+  --border-light: rgba(255, 255, 255, 0.12);
+  --border-active: rgba(255, 255, 255, 0.4);
+  --accent-white: #FFFFFF;
+  --accent-silver: #E2E8F0;
+  --text-muted: #94A3B8;
+  --text-dim: #64748B;
+
+  /* Shadows & Glows */
+  --glow-white: 0 0 25px rgba(255, 255, 255, 0.15);
+  --glow-subtle: 0 0 15px rgba(255, 255, 255, 0.08);
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+  /* Typography Families */
+  --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-code: 'JetBrains Mono', monospace;
+
+  /* Typography Scales */
+  --size-hero: 4.5rem;       /* 72px */
+  --size-h1: 3.5rem;         /* 56px */
+  --size-h2: 2.5rem;         /* 40px */
+  --size-h3: 1.5rem;         /* 24px */
+  --size-h4: 1.25rem;        /* 20px */
+  --size-body: 1.05rem;      /* 17px */
+  --size-subtext: 0.9rem;    /* 14.4px */
+  --size-code: 0.95rem;      /* 15px */
+
+  /* Spacing Scale */
+  --space-2xs: 0.25rem;      /* 4px */
+  --space-xs: 0.5rem;        /* 8px */
+  --space-sm: 0.75rem;       /* 12px */
+  --space-md: 1rem;          /* 16px */
+  --space-lg: 1.5rem;        /* 24px */
+  --space-xl: 2.5rem;        /* 40px */
+  --space-2xl: 4rem;         /* 64px */
+  --space-3xl: 6rem;         /* 96px */
+
+  /* Container & Layout */
+  --container-max-width: 1200px;
+  --nav-height: 80px;
+
+  /* Border Radii */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* Transitions & Motion */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}

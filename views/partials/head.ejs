@@ -1,0 +1,33 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= typeof title !== 'undefined' ? title + ' | Sakshi Bansal' : 'Sakshi Bansal | Monochromatic Developer Portfolio' %></title>
+<meta name="description" content="Personal developer portfolio of Sakshi Bansal — Fullstack Node.js & SQL Developer preparing for Govt Exams with modern web architecture.">
+<meta name="author" content="Sakshi Bansal">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- Main Design System CSS -->
+<link rel="stylesheet" href="/css/style.css">
+
+<!-- Parallax & Micro-Interactions Engine -->
+<script src="/js/parallax.js" defer></script>
+
+<!-- Google Analytics 4 (GA4) Integration Placeholder -->
+<% if (gaMeasurementId && gaMeasurementId !== 'G-XXXXXXXXXX') { %>
+<script async src="https://www.googletagmanager.com/gtag/js?id=<%= gaMeasurementId %>"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '<%= gaMeasurementId %>');
+</script>
+<% } else { %>
+<!-- GA4 Placeholder: Set GA_MEASUREMENT_ID in .env to activate live tracking -->
+<script>
+  window.gaMeasurementId = "<%= gaMeasurementId || 'G-XXXXXXXXXX' %>";
+  console.log('[GA4 Placeholder] Initialized with ID:', window.gaMeasurementId);
+</script>
+<% } %>

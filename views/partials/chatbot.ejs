@@ -1,0 +1,46 @@
+<!-- Floating Sidekick Chatbot Widget -->
+<div id="chatbotContainer" style="position: fixed; bottom: 24px; right: 24px; z-index: 1500; font-family: var(--font-body);">
+  
+  <!-- Trigger Button -->
+  <button id="chatbotToggleBtn" style="width: 54px; height: 54px; border-radius: 50%; background: var(--accent-white); color: var(--bg-primary); border: none; cursor: pointer; box-shadow: var(--glow-white), 0 8px 24px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; transition: all var(--transition-normal);">
+    <svg id="chatIconOpen" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    <svg id="chatIconClose" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+
+  <!-- Chat Window Panel -->
+  <div id="chatbotWindow" class="glass-card" style="display: none; position: absolute; bottom: 70px; right: 0; width: 360px; max-width: calc(100vw - 32px); height: 500px; max-height: calc(100vh - 120px); padding: 0; overflow: hidden; flex-direction: column; box-shadow: var(--shadow-card), 0 0 30px rgba(0,0,0,0.8); border: 1px solid var(--border-active);">
+    
+    <!-- Chat Header -->
+    <div style="padding: var(--space-md); background: rgba(18, 18, 22, 0.9); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: var(--space-xs);">
+        <span class="status-dot" style="width: 8px; height: 8px; background-color: #10B981; border-radius: 50%; box-shadow: 0 0 8px #10B981;"></span>
+        <div>
+          <strong style="color: var(--accent-white); font-size: 0.95rem; display: block;">Sakshi's Sidekick AI</strong>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Online • Powered by Express & SQLite</span>
+        </div>
+      </div>
+      <button id="chatbotCloseHeaderBtn" style="background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer;">&times;</button>
+    </div>
+
+    <!-- Messages Container -->
+    <div id="chatMessages" style="flex: 1; padding: var(--space-md); overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-md);">
+      <div class="chat-bubble bot-bubble" style="align-self: flex-start; max-width: 85%; background: rgba(255,255,255,0.06); border: 1px solid var(--border-light); padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.88rem; color: var(--accent-silver); line-height: 1.5;">
+        👋 Hi! I'm Sakshi's automated Assistant. How can I help you today?
+      </div>
+    </div>
+
+    <!-- Quick Question Chips -->
+    <div style="padding: 0.5rem var(--space-md); background: rgba(0,0,0,0.3); border-top: 1px solid var(--border-light); display: flex; gap: 0.4rem; overflow-x: auto; white-space: nowrap;">
+      <button class="chat-chip" data-query="Who is Sakshi?">Who is Sakshi?</button>
+      <button class="chat-chip" data-query="What are her technical skills?">Technical Skills</button>
+      <button class="chat-chip" data-query="Tell me about her Govt exam prep">Govt Exam Goals</button>
+      <button class="chat-chip" data-query="How to contact her?">Contact Info</button>
+    </div>
+
+    <!-- Input Form -->
+    <form id="chatForm" style="padding: var(--space-sm); background: rgba(18, 18, 22, 0.95); border-top: 1px solid var(--border-light); display: flex; gap: var(--space-xs);">
+      <input type="text" id="chatInput" placeholder="Ask a question..." style="flex: 1; padding: 0.6rem 0.8rem; background: rgba(0,0,0,0.6); border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--accent-white); font-size: 0.88rem; font-family: var(--font-body);" required>
+      <button type="submit" class="btn btn-primary btn-sm" style="padding: 0.6rem 0.9rem;">Send</button>
+    </form>
+  </div>
+</div>
